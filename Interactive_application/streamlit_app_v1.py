@@ -1,3 +1,5 @@
+# streamlit_app_v1.py
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -23,13 +25,13 @@ if "Form" in df.columns:
     architecture = st.sidebar.selectbox("Select architecture:", sorted(df["Form"].unique()))
     df = df[df["Form"] == architecture]
 
-# OSR range slider:
+# select OSR range:
 osr_min, osr_max = float(df["OSR"].min()), float(df["OSR"].max())
 osr_range = st.sidebar.slider("Select OSR range:", osr_min, osr_max, (osr_min, osr_max))
 
 # select Hinf gain:
 if "Hinf" in df.columns:
-    hinf_range = st.sidebar.slider("Select Hinf range:", float(df["Hinf"].min()), float(df["Hinf"].max()), 
+    hinf_range = st.sidebar.slider("Select Hinf gain range:", float(df["Hinf"].min()), float(df["Hinf"].max()), 
                                    (float(df["Hinf"].min()), float(df["Hinf"].max())))
 
 # select quantization levels:
