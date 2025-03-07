@@ -296,37 +296,52 @@ if __name__ == "__main__":
     num_samples = 50
     min_snr = 50
 
-    # define parameter ranges (set as function args better?):
+    # define parameter ranges:
     if implementation == 'Active-RC':
         parameter_ranges = [
-            (10e3, 10e9), # Bw (Bandwidth)
+            (10e6, 10e8), # Bw (Bandwidth)
             [8, 16, 32, 64, 128, 256], # osr (Oversampling Ratio) - Discrete
             [2, 3, 4, 5], # nlev (Number of Levels) - Discrete
-            (1.0, 2.0), # Hinf (Infinity Gain)
-            (100e-15, 5e-12), # Cint (Integration Capacitance)
-            (1e-6, 1e-3), # gm (Transconductance)
-            (100e3, 10e6), # Ro (Output Resistance)
-            (50e-15, 1e-12), # Co (Output Capacitance)
-        ]
+            [1.5], # Hinf (Infinity Gain) - Discrete
+            (1e-15, 1e-12), # Cint (Integration Capacitance)
+            (50e-6, 1e-3), # gm (Transconductance)
+            (1e3, 1e6), # Ro (Output Resistance)
+            (1e-14, 1e-11), # Co (Output Capacitance)
+        ]      
+        
+        # define discrete parameters:
+        discrete_params = [
+            (1, [8, 16, 32, 64, 128, 256]), # osr (discrete)
+            (2, [2, 3, 4, 5]), # nlev (discrete)
+            (3, [1.5]) # Hinf (discrete)
+    	]
+    
     elif implementation == 'Gm-C':
         parameter_ranges = [
-            (10e3, 10e9), # Bw (Bandwidth)
+            (10e6, 10e8), # Bw (Bandwidth)
             [8, 16, 32, 64, 128, 256], # osr (Oversampling Ratio) - Discrete
             [2, 3, 4, 5], # nlev (Number of Levels) - Discrete
-            (1.0, 2.0), # Hinf (Infinity Gain)
-            (100e-15, 2e-12), # Cint (Integration Capacitance)
-            (10e3, 1e6), # Ro (Output Resistance)
+            [1.5], # Hinf (Infinity Gain) - Discrete
+            (1e-15, 1e-12), # Cint (Integration Capacitance)
+            (1e3, 1e6), # Ro (Output Resistance)
             (1e-15, 100e-15), # Cp (Capacitor)
             (10e-9, 1e-6), # v_n (Noise Voltage)
             (1e-6, 100e-6), # slew_rate (Slew Rate)
-            (0.5, 3.0), # output_swing (Output Swing)
+            [1.0], # output_swing (Output Swing) - Discrete
         ]
+        
+        # define discrete parameters:
+        discrete_params = [
+            (1, [8, 16, 32, 64, 128, 256]), # osr (discrete)
+            (2, [2, 3, 4, 5]), # nlev (discrete)
+            (3, [1.5]), # Hinf (discrete)
+            (9, [1.0]) # output_swing (discrete)
+    	]
+    	
+    else:
+    	raise ValueError(f"Unknown implementation type: {implementation}")
 
-    # define discrete parameters:
-    discrete_params = [
-        (1, [8, 16, 32, 64, 128, 256]), # osr (discrete)
-        (2, [2, 3, 4, 5]) # nlev (discrete)
-    ]
+
 
     dataset = generate_dataset(form, order, implementation, num_samples, min_snr, parameter_ranges, discrete_params)
     print(dataset.head())
